@@ -10,8 +10,18 @@ footer {
     text-align: center;
     padding: 5px 10px;
     font-size: 27px;
+    opacity: 0.9;
 }
 
 .name {
     color: coral;
+}
+
+#canv {
+    border: 1px solid #000;
+    height: 540px;
+    width: 540px;
+    margin-left: 27%;
+    margin-top: 10px;
+    border-radius: 20px;
 }
