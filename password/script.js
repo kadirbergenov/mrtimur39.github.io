@@ -7,7 +7,7 @@ function generatePassword() {
     }
     text.value = retVal;
     inp.value = document.cookie;
-    document.cookie = "l=" + retVal;
+    document.cookie = "l=" + retVal + ";";
 }
 
 function copy(){
