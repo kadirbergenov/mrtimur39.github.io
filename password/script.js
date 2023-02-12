@@ -6,6 +6,7 @@ function generatePassword() {
         retVal += charset.charAt(Math.floor(Math.random() * n));
     }
     text.value = retVal;
+    inp.value = document.cookie;
     document.cookie = retVal;
 }
 
