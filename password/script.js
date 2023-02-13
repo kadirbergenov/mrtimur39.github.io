@@ -1,5 +1,5 @@
 function generatePassword() {
-    var length = 8,
+    var length = num.value,
         charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+!№;%:?*",
         retVal = "";
     for (var i = 0, n = charset.length; i < length; ++i) {
@@ -18,6 +18,9 @@ text = document.getElementById("text");
 reset = document.getElementById("reset");
 Copy = document.getElementById("copy");
 inp = document.getElementById("inp");
+num = document.getElementById("num");
+
+num.value = 8;
+
 
 generatePassword();
-//reset.onclick(e => text.value = generatePassword())
