@@ -52,9 +52,17 @@
 
 
 
-		function loadGpxFile(fileURL) {
-			fetch(fileURL+"NukusLines/")
-				.then(response => response.text())
+		function loadGpxFile(fileName) {
+			// Ensure the path is relative to the site root or the same folder as index.html
+			const fileURL = `NukusLines/${fileName}`;
+
+			fetch(fileURL)
+				.then(response => {
+					if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+					return response.text();
+				})
 				.then(gpxData => {
 					parseAndDrawRoute(gpxData);
 				})
