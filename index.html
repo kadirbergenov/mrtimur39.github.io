@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Nukus Lines</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
   <script src="https://unpkg.com/togeojson@0.16.0/togeojson.js"></script>
 </head>
+
 <body>
   <div id="map"></div>
   <div class="search-container">
@@ -14,7 +16,101 @@
     <button id="search-button">Search</button>
   </div>
 
-  <script src="https://mrtimur39.github.io/script.js"></script> 
-  <script src="https://mrtimur39.github.io/route.js"></script>
+  <!-- <script src="https://raw.githubusercontent.com/kadirbergenov/mrtimur39.github.io/refs/heads/main/script.js"></script>  -->
+  <script>
+    var map = L.map('map').setView([51.505, -0.09], 13);
+
+    // Create a tile layer to display the map tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+      maxZoom: 18,
+    }).addTo(map);
+
+    //var routeCoordinates = [
+    // [42.4618479,59.6165722],
+    //[42.471069, 59.595527]
+    //];
+
+    //var route = L.polyline(routeCoordinates, { color: 'red' }).addTo(map);
+
+    //map.fitBounds(route.getBounds());
+
+    var searchInput = document.getElementById('search-input');
+    var searchButton = document.getElementById('search-button');
+
+
+
+    window.addEventListener('resize', function () {
+      map.invalidateSize();
+    });
+
+  </script>
+  <script>
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+
+
+    function loadGpxFile(fileURL) {
+      fetch(fileURL)
+        .then(response => response.text())
+        .then(gpxData => {
+          parseAndDrawRoute(gpxData);
+        })
+        .catch(error => {
+          console.error('Error loading GPX file:', error);
+        });
+    }
+
+    function parseAndDrawRoute(gpx) {
+      var parser = new DOMParser();
+      var xmlDoc = parser.parseFromString(gpx, 'text/xml');
+      var trackSegments = xmlDoc.getElementsByTagName('trkpt');
+      var latLngs = [];
+
+      for (var i = 0; i < trackSegments.length; i++) {
+        var lat = parseFloat(trackSegments[i].getAttribute('lat'));
+        var lon = parseFloat(trackSegments[i].getAttribute('lon'));
+        latLngs.push([lat, lon]);
+      }
+
+      // Clear existing layers before drawing the new route
+      map.eachLayer(function (layer) {
+        if (layer !== map && !(layer instanceof L.TileLayer)) {
+          map.removeLayer(layer);
+        }
+      });
+
+      // Create a Leaflet polyline from the latLngs array
+      var routePolyline = L.polyline(latLngs, { color: 'blue' });
+
+      // Add the polyline to the map
+      routePolyline.addTo(map);
+
+      // Fit the map to the bounds of the route polyline
+      map.fitBounds(routePolyline.getBounds());
+    }
+
+    function handleSearch(event) {
+      event.preventDefault();
+      var address = searchInput.value;
+      if (address) {
+        try {
+          var gpxFileURL = address + '.gpx';
+          loadGpxFile(gpxFileURL);
+        }
+        catch { }
+      }
+    }
+
+    loadGpxFile("1.gpx")
+    searchButton.addEventListener('click', handleSearch);
+
+    // Example: Load the GPX file from the server
+
+  </script>
+  <!-- <script src="https://raw.githubusercontent.com/kadirbergenov/mrtimur39.github.io/refs/heads/main/route.js"></script> -->
 </body>
+
 </html>
